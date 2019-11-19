@@ -1,0 +1,9 @@
+psql:
+  dbname: "dev-user"
+  host: "db"
+  port: 5432
+  user: "dev-user"
+  pass: "testpassword"
+  sslmode: "disable"
+  schema: "public"
+  blacklist: ["schema_migrations","goose_db_version"]
