@@ -3,7 +3,7 @@
 create table if not exists users(
     id SERIAL PRIMARY KEY,
     user_id UUID UNIQUE not null,
-    username varchar(100) not null,
+    username varchar(100) not null unique,
     password varchar(100) not null
 );
 
