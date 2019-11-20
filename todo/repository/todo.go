@@ -1,6 +1,9 @@
 package repository
 
-import "database/sql"
+import (
+	"context"
+	"database/sql"
+)
 
 type Todo struct {
 	ID    string
@@ -10,4 +13,16 @@ type Todo struct {
 
 type TodoRepo struct {
 	db *sql.DB
+}
+
+func New(db *sql.DB) *TodoRepo {
+	return &TodoRepo{db}
+}
+
+func (t *TodoRepo) Create(ctx context.Context) {
+	//u := model.Todo{
+	//	Title: title,
+	//	Text: text
+	//}
+
 }
