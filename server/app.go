@@ -1,6 +1,9 @@
 package server
 
 import (
+	authHttpDelivery "app/auth/delivery/http"
+	"app/auth/repository"
+	authUseCase "app/auth/usecase"
 	"app/db"
 	"context"
 	"database/sql"
@@ -14,6 +17,8 @@ import (
 type Application struct {
 	httpServer *http.Server
 	db         *sql.DB
+
+	authUseCase *authUseCase.UserUseCase
 }
 
 func NewApplication() *Application {
@@ -22,8 +27,11 @@ func NewApplication() *Application {
 		log.Fatalf("Cant connect to db because of %s", err)
 	}
 
+	userRepo := repository.New(database)
+
 	return &Application{
-		db: database,
+		db:          database,
+		authUseCase: authUseCase.New(userRepo),
 	}
 }
 
@@ -37,10 +45,11 @@ func (a *Application) getHandler() (http.Handler, error) {
 
 	apiHandlers := handler.Group("/api/v1")
 
+	authDelivery := authHttpDelivery.New(a.authUseCase)
 	authHandler := apiHandlers.Group("/auth")
 	{
-		authHandler.POST("/sign-in")
-		authHandler.POST("/sign-up")
+		authHandler.POST("/sign-in", authDelivery.SignIn)
+		authHandler.POST("/sign-up", authDelivery.SignUp)
 		authHandler.POST("/sign-out")
 	}
 
